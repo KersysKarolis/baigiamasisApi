@@ -25,6 +25,10 @@ public class Employee {
     private String surname;
     @Column
     private String email;
+    @Column(unique = true)
+    private String username;
+    @Column
+    private String password; 
     @Column
     private LocalDateTime createdAt;
     @Column
