@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,7 +29,9 @@ public class Employee {
     private LocalDateTime createdAt;
     @Column
     private LocalDateTime updatedAt;
-    
+    @OneToMany(mappedBy = "employee")
+    private List<Order> orderList;
+
     @PrePersist
     void prePersist(){
         this.createdAt = LocalDateTime.now();
