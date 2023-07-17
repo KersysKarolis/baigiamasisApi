@@ -20,6 +20,10 @@ public class Order {
     private Long id;
     @Column(unique = true)
     private Integer orderNumber;
+    @ManyToOne
+    private Employee employee;
+    @ManyToOne
+    private User user;
    @Column
     private LocalDateTime orderCreatedAt;
    @Column
