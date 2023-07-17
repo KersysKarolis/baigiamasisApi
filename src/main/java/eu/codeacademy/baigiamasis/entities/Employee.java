@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "animators")
-public class Animator {
+@Table(name = "employee")
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +28,7 @@ public class Animator {
     private LocalDateTime createdAt;
     @Column
     private LocalDateTime updatedAt;
+    
     @PrePersist
     void prePersist(){
         this.createdAt = LocalDateTime.now();
