@@ -6,6 +6,7 @@ import eu.codeacademy.baigiamasis.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class ClientController {
     @Autowired
     ClientService clientService;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ClientDTO>> getAllClients() {
         try {
@@ -43,7 +44,7 @@ public class ClientController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
     public ResponseEntity<ClientDTO> updateClientById(@RequestBody ClientDTO clientDTO) {
         try {
@@ -52,7 +53,7 @@ public class ClientController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
         try {

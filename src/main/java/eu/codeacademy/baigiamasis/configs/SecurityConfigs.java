@@ -21,12 +21,14 @@ public class SecurityConfigs {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.DELETE)
                 .hasRole("ADMIN")
-                .antMatchers("/**")
+                .antMatchers("/clients/**")
                 .hasAnyRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic()
+                .and()
+                .authorizeRequests().anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -34,8 +36,8 @@ public class SecurityConfigs {
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+   @Bean
+   public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
