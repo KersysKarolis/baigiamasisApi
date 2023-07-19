@@ -1,10 +1,9 @@
 package eu.codeacademy.baigiamasis.converters;
 
-import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
 import eu.codeacademy.baigiamasis.dto.OrderDTO;
 import eu.codeacademy.baigiamasis.entities.Employee;
 import eu.codeacademy.baigiamasis.entities.Order;
-import eu.codeacademy.baigiamasis.entities.User;
+import eu.codeacademy.baigiamasis.entities.Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +20,10 @@ public abstract class OrderConverter {
                 employee.setId(orderDTO.getId());
                 order.setEmployee(employee);
             }
-            if(orderDTO.getUserDtoId() != null){
-                User user = new User();
-                user.setId(orderDTO.getId());
-                order.setUser(user);
+            if(orderDTO.getClientDtoId() != null){
+                Client client = new Client();
+                client.setId(orderDTO.getId());
+                order.setClient(client);
             }
         }
         return order;
@@ -35,7 +34,7 @@ public abstract class OrderConverter {
             orderDTO = new OrderDTO();
             orderDTO.setId(order.getId());
             orderDTO.setOrderNumber(order.getOrderNumber());
-            orderDTO.setUserDtoId(order.getUser().getId());
+            orderDTO.setClientDtoId(order.getClient().getId());
             orderDTO.setEmployeeDtoId(order.getEmployee().getId());
         }
         return orderDTO;
