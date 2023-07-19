@@ -9,10 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
-public class OrderDTO {
-    private Long id;
-    private Integer orderNumber;
-    private Long clientDtoId;
-    private Long employeeDtoId;
+public class CreateClientDTO extends ClientDTO{
+    private String firstPassword;
+    private String secondPassword;
 }
