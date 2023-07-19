@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDTO {
+public class ClientDTO {
     private Long id;
     private String name;
     private String surname;
