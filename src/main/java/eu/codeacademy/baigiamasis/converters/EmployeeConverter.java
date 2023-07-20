@@ -1,5 +1,6 @@
 package eu.codeacademy.baigiamasis.converters;
 
+import eu.codeacademy.baigiamasis.dto.CreateEmployeeDTO;
 import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
 import eu.codeacademy.baigiamasis.entities.Employee;
 
@@ -14,7 +15,7 @@ public abstract class EmployeeConverter {
             employee.setId(employeeDTO.getId());
             employee.setEmail(employeeDTO.getEmail());
             employee.setName(employeeDTO.getName());
-            employee.setUsername(employeeDTO.getUsername());
+            employee.setSurname(employeeDTO.getSurname());
             employee.setOrderList(OrderConverter.convertOrdersDTOToOrders(employeeDTO.getOrderDTOList()));
         }
         return employee;
@@ -27,7 +28,7 @@ public abstract class EmployeeConverter {
             employeeDTO.setId(employee.getId());
             employeeDTO.setName(employee.getName());
             employeeDTO.setEmail(employee.getEmail());
-            employeeDTO.setUsername(employee.getUsername());
+            employeeDTO.setSurname(employee.getSurname());
             employeeDTO.setOrderDTOList(OrderConverter.convertOrdersToOrdersDTO(employee.getOrderList()));
         }
         return employeeDTO;
@@ -40,6 +41,20 @@ public abstract class EmployeeConverter {
                 employeeDTOS.add(convertEmployeeToEmployeeDTO(e));
             }
         }
-        return employeeDTOS; 
+        return employeeDTOS;
+    }
+    public static Employee convertCreateEmployeeDTOToEmployee(CreateEmployeeDTO employeeDTO){
+        Employee employee = null;
+        if(employeeDTO != null){
+            employee = new Employee();
+            employee.setName(employeeDTO.getName());
+            employee.setSurname(employeeDTO.getSurname());
+            employee.setId(employeeDTO.getId());
+            employee.setEmail(employeeDTO.getEmail());
+            employee.setUsername(employeeDTO.getUsername());
+            employee.setPassword(employeeDTO.getFirstPassword());
+            employee.setOrderList(OrderConverter.convertOrdersDTOToOrders(employeeDTO.getOrderDTOList()));
+        }
+        return employee;
     }
 }

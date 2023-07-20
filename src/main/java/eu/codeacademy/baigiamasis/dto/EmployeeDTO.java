@@ -13,8 +13,9 @@ import java.util.List;
 @Setter
 public class EmployeeDTO {
     private Long id;
-    private String username;
+
     private String name;
+    private String surname;
     private String email;
     private List<OrderDTO> orderDTOList;
 }

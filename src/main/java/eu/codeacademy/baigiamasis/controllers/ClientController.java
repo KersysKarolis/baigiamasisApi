@@ -17,7 +17,7 @@ import java.util.List;
 public class ClientController {
     @Autowired
     ClientService clientService;
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ClientDTO>> getAllClients() {
         try {

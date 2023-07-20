@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfigs {
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
@@ -23,12 +24,14 @@ public class SecurityConfigs {
                 .hasRole("ADMIN")
                 .antMatchers("/clients/**")
                 .hasAnyRole("ADMIN")
+                .antMatchers("/employees/**")
+                .hasAnyRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic()
-                .and()
-                .authorizeRequests().anyRequest().permitAll()
+                //.and()
+                //.authorizeRequests().anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
