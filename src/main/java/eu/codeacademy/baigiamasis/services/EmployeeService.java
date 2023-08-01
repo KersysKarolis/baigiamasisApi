@@ -7,6 +7,8 @@ import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
 import eu.codeacademy.baigiamasis.entities.Employee;
 import eu.codeacademy.baigiamasis.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,14 @@ public class EmployeeService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public List<EmployeeDTO> getAllEmployees(){
-        return EmployeeConverter.convertEmployeesToEmployeesDTO(employeeRepository.findAll());
+    public List<EmployeeDTO> getAllEmployeesByRole(Pageable pageable, String role){
+        Page<Employee> employeePage = null;
+        if(role != null){
+            employeePage = employeeRepository.findAllByRole(pageable, role);
+        }else {
+            employeePage = employeeRepository.findAll(pageable);
+        }
+        return EmployeeConverter.convertEmployeesToEmployeesDTO(employeePage);
     }
     public EmployeeDTO getEmployeeById(Long id){
         return EmployeeConverter.convertEmployeeToEmployeeDTO(employeeRepository.findById(id).get());
