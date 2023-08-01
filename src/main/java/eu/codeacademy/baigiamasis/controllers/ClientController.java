@@ -22,7 +22,7 @@ import java.util.List;
 public class ClientController {
     @Autowired
     ClientService clientService;
-    @PreAuthorize("hasAnyRole('ADMIN')")
+
     @GetMapping
     public ResponseEntity<List<ClientDTO>> getAllClients(@PageableDefault Pageable pageable, @RequestParam(name = "name", required = false) String name) {
         try {
@@ -51,7 +51,7 @@ public class ClientController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
-    public ResponseEntity<ClientDTO> updateClientById(@RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<ClientDTO> updateClientById(@Valid @RequestBody ClientDTO clientDTO) {
         try {
             return ResponseEntity.ok().body(clientService.updateClientById(clientDTO));
         } catch (NullPointerException e) {
