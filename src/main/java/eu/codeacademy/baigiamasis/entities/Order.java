@@ -23,7 +23,7 @@ public class Order {
     @ManyToOne
     private Employee employee;
     @ManyToOne
-    private User user;
+    private Client client;
    @Column
     private LocalDateTime orderCreatedAt;
    @Column

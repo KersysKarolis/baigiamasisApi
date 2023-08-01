@@ -1,5 +1,6 @@
 package eu.codeacademy.baigiamasis.entities;
 
+import eu.codeacademy.baigiamasis.enumerators.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,12 +32,16 @@ public class User {
     private Integer phoneNumber;
     @Column
     private String email;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Order> orderList;
     @Column
     private LocalDateTime createdAt;
     @Column
     private LocalDateTime updatedAt;
+
 
     @PrePersist
     void prePersist() {
