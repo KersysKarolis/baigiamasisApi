@@ -1,5 +1,6 @@
 package eu.codeacademy.baigiamasis.entities;
 
+import eu.codeacademy.baigiamasis.enumerators.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,10 @@ public class Employee {
     @Column(unique = true)
     private String username;
     @Column
-    private String password; 
+    private String password;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @Column
     private LocalDateTime createdAt;
     @Column
