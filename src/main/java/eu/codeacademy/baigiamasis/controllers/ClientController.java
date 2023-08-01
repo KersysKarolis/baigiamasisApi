@@ -2,6 +2,7 @@ package eu.codeacademy.baigiamasis.controllers;
 
 import eu.codeacademy.baigiamasis.converters.ClientConverter;
 import eu.codeacademy.baigiamasis.dto.ClientDTO;
+import eu.codeacademy.baigiamasis.dto.ClientPasswordChangeDTO;
 import eu.codeacademy.baigiamasis.dto.CreateClientDTO;
 import eu.codeacademy.baigiamasis.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/clients")
@@ -66,6 +69,26 @@ public class ClientController {
             return ResponseEntity.ok().build();
         } catch (NullPointerException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateClientPasswordById(@PathVariable Long id, @Valid @RequestBody ClientPasswordChangeDTO clientChangeDTO){
+        try{
+            clientService.changeClientPassword(clientChangeDTO, id);
+            return ResponseEntity.ok().build();
+        } catch(InputMismatchException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateClientRoleById(@PathVariable Long id, @Valid @RequestBody String role){
+        try{
+            clientService.changeClientRole(role, id);
+            return ResponseEntity.ok().build();
+        }catch (NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage()); 
         }
     }
 }
