@@ -17,12 +17,12 @@ public abstract class OrderConverter {
             order.setOrderNumber(orderDTO.getOrderNumber());
             if(orderDTO.getEmployeeDtoId() != null){
                 Employee employee = new Employee();
-                employee.setId(orderDTO.getId());
+                employee.setId(orderDTO.getEmployeeDtoId());
                 order.setEmployee(employee);
             }
             if(orderDTO.getClientDtoId() != null){
                 Client client = new Client();
-                client.setId(orderDTO.getId());
+                client.setId(orderDTO.getClientDtoId());
                 order.setClient(client);
             }
         }
@@ -39,9 +39,9 @@ public abstract class OrderConverter {
         }
         return orderDTO;
     }
-    public static List<OrderDTO> convertOrdersToOrdersDTO(List<Order> orderList) {
+    public static List<OrderDTO> convertOrdersToOrdersDTO(Iterable<Order> orderList) {
         List<OrderDTO> ordersDTO = null;
-        if(orderList != null && !orderList.isEmpty()){
+        if(orderList != null){
             ordersDTO = new ArrayList<>();
             for(Order e: orderList){
                 ordersDTO.add(convertOrderToOrderDTO(e));

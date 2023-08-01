@@ -33,9 +33,9 @@ public abstract class EmployeeConverter {
         }
         return employeeDTO;
     }
-    public static List<EmployeeDTO> convertEmployeesToEmployeesDTO(List<Employee> employeeList){
+    public static List<EmployeeDTO> convertEmployeesToEmployeesDTO(Iterable<Employee> employeeList){
         List<EmployeeDTO> employeeDTOS = null;
-        if(employeeList != null && !employeeList.isEmpty()){
+        if(employeeList != null){
             employeeDTOS = new ArrayList<>();
             for(Employee e: employeeList){
                 employeeDTOS.add(convertEmployeeToEmployeeDTO(e));

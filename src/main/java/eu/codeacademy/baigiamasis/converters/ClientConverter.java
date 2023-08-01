@@ -37,9 +37,9 @@ public abstract class ClientConverter {
         return client;
     }
 
-    public static List<ClientDTO> convertClientsToClientsDTO(List<Client> usersList) {
+    public static List<ClientDTO> convertClientsToClientsDTO(Iterable<Client> usersList) {
         List<ClientDTO> clientDTOList = null;
-        if (usersList != null && !usersList.isEmpty()) {
+        if (usersList != null) {
             clientDTOList = new ArrayList<>();
             for (Client e : usersList) {
                 clientDTOList.add(convertClientToClientDTO(e));
