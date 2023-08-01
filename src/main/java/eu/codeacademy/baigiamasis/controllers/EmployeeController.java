@@ -4,8 +4,11 @@ import eu.codeacademy.baigiamasis.dto.CreateEmployeeDTO;
 import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
 import eu.codeacademy.baigiamasis.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,13 +19,14 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/employees")
+@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
    @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(@PageableDefault Pageable pageable, @RequestParam(name = "role", required = false) String role){
         try{
-            return ResponseEntity.ok().body(employeeService.getAllEmployees());
+            return ResponseEntity.ok().body(employeeService.getAllEmployeesByRole(pageable, role));
         } catch (NullPointerException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -53,7 +57,7 @@ public class EmployeeController {
        }
     }
     @PutMapping
-    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@Valid @RequestBody EmployeeDTO employeeDTO){
        try{
            return ResponseEntity.ok().body(employeeService.updateEmployeeById(employeeDTO));
        } catch (NullPointerException e){
