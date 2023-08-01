@@ -20,6 +20,11 @@ public class SecurityConfigs {
         http.csrf()
                 .disable()
                 .authorizeRequests()
+                .antMatchers("/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html").permitAll()
+                .and()
+                .authorizeRequests()
                 .antMatchers(HttpMethod.DELETE)
                 .hasRole("ADMIN")
                 .antMatchers("/clients/**")
@@ -30,12 +35,10 @@ public class SecurityConfigs {
                 .authenticated()
                 .and()
                 .httpBasic()
-                //.and()
                 //.authorizeRequests().anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         return http.build();
     }
 
