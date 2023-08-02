@@ -7,6 +7,8 @@ import eu.codeacademy.baigiamasis.repositories.ClientRepository;
 import eu.codeacademy.baigiamasis.repositories.EmployeeRepository;
 import eu.codeacademy.baigiamasis.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class OrderService {
     EmployeeRepository employeeRepository;
     @Autowired
     ClientRepository clientRepository;
+    @Autowired
+    MessageSource messageSource;
     public List<OrderDTO> getAllOrdersByClientId(Pageable pageable, Long id){
         Page<Order> orderPage = null;
         if(id != null){
@@ -41,9 +45,9 @@ public class OrderService {
         boolean isClientExist = clientRepository.existsById(orderDTO.getClientDtoId());
         boolean isEmployeeExist = employeeRepository.existsById(orderDTO.getEmployeeDtoId());
         if(!isClientExist){
-            throw new NoSuchElementException("Please check client id");
+            throw new NoSuchElementException(messageSource.getMessage("client.by.id.not.found", null, LocaleContextHolder.getLocale()));
         } else if(!isEmployeeExist){
-            throw new NoSuchElementException("Please check employee id");
+            throw new NoSuchElementException(messageSource.getMessage("employee.by.id.not.found", null, LocaleContextHolder.getLocale()));
         } else {
             Order order = OrderConverter.convertOrderDTOToOrder(orderDTO);
             orderRepository.saveAndFlush(order);
@@ -62,7 +66,7 @@ public class OrderService {
             orderRepository.saveAndFlush(order);
             return OrderConverter.convertOrderToOrderDTO(order);
         } else{
-            throw new NoSuchElementException("Order by given id not found");
+            throw new NoSuchElementException(messageSource.getMessage("order.by.id.not.found", null, LocaleContextHolder.getLocale()));
         }
     }
 
