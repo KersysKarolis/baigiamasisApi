@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ClientPasswordChangeDTO {
+public class PasswordChangeDTO {
    @NotNull(message = "Enter old password")
     private String oldPassword;
     @NotNull(message = "Enter new password")
