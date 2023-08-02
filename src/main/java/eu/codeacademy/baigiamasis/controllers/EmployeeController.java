@@ -1,7 +1,10 @@
 package eu.codeacademy.baigiamasis.controllers;
 
+import eu.codeacademy.baigiamasis.converters.EmployeeConverter;
 import eu.codeacademy.baigiamasis.dto.CreateEmployeeDTO;
 import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
+import eu.codeacademy.baigiamasis.exceptions.ObjectAlreadyExistsException;
+import eu.codeacademy.baigiamasis.exceptions.PasswordDoesNotMatchException;
 import eu.codeacademy.baigiamasis.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -25,16 +28,12 @@ public class EmployeeController {
     EmployeeService employeeService;
    @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(@PageableDefault Pageable pageable, @RequestParam(name = "role", required = false) String role){
-        try{
             return ResponseEntity.ok().body(employeeService.getAllEmployeesByRole(pageable, role));
-        } catch (NullPointerException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
     }
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id){
        try{
-           return ResponseEntity.ok().body(employeeService.getEmployeeById(id));
+           return ResponseEntity.ok().body(EmployeeConverter.convertEmployeeToEmployeeDTO(employeeService.getEmployeeById(id)));
        } catch (NoSuchElementException e){
            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
        }
@@ -43,7 +42,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> addNewEmployee(@Valid @RequestBody CreateEmployeeDTO createEmployeeDTO){
        try{
            return ResponseEntity.ok().body(employeeService.addNewEmployee(createEmployeeDTO));
-       } catch(InputMismatchException e){
+       } catch(ObjectAlreadyExistsException | PasswordDoesNotMatchException e){
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
        }
     }
@@ -60,7 +59,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> updateEmployeeById(@Valid @RequestBody EmployeeDTO employeeDTO){
        try{
            return ResponseEntity.ok().body(employeeService.updateEmployeeById(employeeDTO));
-       } catch (NullPointerException e){
+       } catch (NoSuchElementException e){
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
        }
     }
