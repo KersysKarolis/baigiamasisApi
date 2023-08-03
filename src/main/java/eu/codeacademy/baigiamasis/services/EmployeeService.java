@@ -5,7 +5,9 @@ import eu.codeacademy.baigiamasis.converters.OrderConverter;
 import eu.codeacademy.baigiamasis.dto.PasswordChangeDTO;
 import eu.codeacademy.baigiamasis.dto.CreateEmployeeDTO;
 import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
+import eu.codeacademy.baigiamasis.entities.Client;
 import eu.codeacademy.baigiamasis.entities.Employee;
+import eu.codeacademy.baigiamasis.enumerators.Role;
 import eu.codeacademy.baigiamasis.exceptions.ObjectAlreadyExistsException;
 import eu.codeacademy.baigiamasis.exceptions.PasswordDoesNotMatchException;
 import eu.codeacademy.baigiamasis.repositories.EmployeeRepository;
@@ -28,6 +30,8 @@ public class EmployeeService {
     PasswordEncoder passwordEncoder;
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    ValidatorService validatorService;
 
     public List<EmployeeDTO> getAllEmployeesByRole(Pageable pageable, String role){
         Page<Employee> employeePage = null;
@@ -49,6 +53,7 @@ public class EmployeeService {
             throw new PasswordDoesNotMatchException(messageSource.getMessage("password.does.not.match", null, LocaleContextHolder.getLocale()));
         }else{
             employee = EmployeeConverter.convertCreateEmployeeDTOToEmployee(employeeDTO);
+            employee.setRole(Role.EMPLOYEE);
             employee.setPassword(passwordEncoder.encode(employee.getPassword()));
             employeeRepository.saveAndFlush(employee);
             return EmployeeConverter.convertEmployeeToEmployeeDTO(employee);
@@ -75,15 +80,11 @@ public class EmployeeService {
     }
     public void changeEmployeePassword(PasswordChangeDTO password, Long id) throws PasswordDoesNotMatchException{
        Employee employee = getEmployeeById(id);
-        if (!(passwordEncoder.matches(password.getOldPassword(), employee.getPassword()))) {
-            throw new PasswordDoesNotMatchException(messageSource.getMessage("incorrect.password", null, LocaleContextHolder.getLocale()));
-
-        } else if (password.getNewPassword().equals(password.getRepeatNewPassword())) {
-            throw new PasswordDoesNotMatchException(messageSource.getMessage("new.password.does.not.match", null, LocaleContextHolder.getLocale()));
-        } else {
+       if(validatorService.isPasswordValid(employee.getPassword(), password)) {
             employee.setPassword(passwordEncoder.encode(password.getNewPassword()));
             employeeRepository.saveAndFlush(employee);
         }
 
     }
+
 }
