@@ -10,7 +10,6 @@ import eu.codeacademy.baigiamasis.enumerators.Role;
 import eu.codeacademy.baigiamasis.exceptions.ObjectAlreadyExistsException;
 import eu.codeacademy.baigiamasis.exceptions.PasswordDoesNotMatchException;
 import eu.codeacademy.baigiamasis.repositories.ClientRepository;
-import eu.codeacademy.baigiamasis.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ClientService {
@@ -32,7 +30,8 @@ public class ClientService {
     @Autowired
     MessageSource messageSource;
     @Autowired
-    private EmployeeRepository employeeRepository;
+    ValidatorService validatorService;
+
 
     public List<ClientDTO> getAllClients() {
         return ClientConverter.convertClientsToClientsDTO(clientRepository.findAll());
@@ -50,6 +49,7 @@ public class ClientService {
         }else {
             Client client = ClientConverter.convertCreateClientDTOToClient(createClientDTO);
             client.setPassword(passwordEncoder.encode(client.getPassword()));
+            client.setRole(Role.CLIENT);
             clientRepository.saveAndFlush(client);
             return ClientConverter.convertClientToClientDTO(client);
         }
@@ -87,28 +87,12 @@ public class ClientService {
 
     public void changeClientPassword(PasswordChangeDTO password, Long id) throws PasswordDoesNotMatchException{
         Client client = getClientById(id);
-        if (!(passwordEncoder.matches(password.getOldPassword(), client.getPassword()))) {
-            throw new PasswordDoesNotMatchException(messageSource.getMessage("incorrect.password", null, LocaleContextHolder.getLocale()));
-
-        } else if (password.getNewPassword().equals(password.getRepeatNewPassword())) {
-            throw new PasswordDoesNotMatchException(messageSource.getMessage("new.password.does.not.match", null, LocaleContextHolder.getLocale()));
-        } else {
+        if(validatorService.isPasswordValid(client.getPassword(), password)) {
             client.setPassword(passwordEncoder.encode(password.getNewPassword()));
            clientRepository.saveAndFlush(client);
         }
 
     }
 
-    public void changeClientRole(String role, Long id) {
-        Client client = getClientById(id);
-        if (role.equals(Role.ADMIN.name())) {
-            client.setRole(Role.ADMIN);
-        } else if (role.equals("EMPLOYEE")) {
-            client.setRole(Role.EMPLOYEE);
-        } else if (role.equals("CLIENT")) {
-            client.setRole(Role.CLIENT);
-        } else {
-            throw new NoSuchElementException("No such role exists");
-        }
-    }
+
 }
