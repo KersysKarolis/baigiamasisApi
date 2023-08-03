@@ -3,6 +3,7 @@ package eu.codeacademy.baigiamasis.controllers;
 import eu.codeacademy.baigiamasis.converters.EmployeeConverter;
 import eu.codeacademy.baigiamasis.dto.CreateEmployeeDTO;
 import eu.codeacademy.baigiamasis.dto.EmployeeDTO;
+import eu.codeacademy.baigiamasis.dto.PasswordChangeDTO;
 import eu.codeacademy.baigiamasis.exceptions.ObjectAlreadyExistsException;
 import eu.codeacademy.baigiamasis.exceptions.PasswordDoesNotMatchException;
 import eu.codeacademy.baigiamasis.services.EmployeeService;
@@ -46,6 +47,7 @@ public class EmployeeController {
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
        }
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long id){
        try{
@@ -61,6 +63,16 @@ public class EmployeeController {
            return ResponseEntity.ok().body(employeeService.updateEmployeeById(employeeDTO));
        } catch (NoSuchElementException e){
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+       }
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateEmployeePasswordById(@PathVariable Long id, @RequestBody PasswordChangeDTO passwordChangeDTO){
+       try{
+           employeeService.changeEmployeePassword(passwordChangeDTO, id);
+           return ResponseEntity.ok().build();
+       } catch(PasswordDoesNotMatchException e){
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
        }
     }
 }
