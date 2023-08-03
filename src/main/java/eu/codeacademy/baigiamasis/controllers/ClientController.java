@@ -82,14 +82,4 @@ public class ClientController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/changeRole/{id}")
-    public ResponseEntity<Void> updateClientRoleById(@PathVariable Long id, @Valid @RequestBody String role){
-        try{
-            clientService.changeClientRole(role, id);
-            return ResponseEntity.ok().build();
-        }catch (NoSuchElementException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
 }
