@@ -44,7 +44,7 @@ public class ClientController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PostMapping
     public ResponseEntity<ClientDTO> addNewClient(@Valid @RequestBody CreateClientDTO createClientDTO) {
         try {
